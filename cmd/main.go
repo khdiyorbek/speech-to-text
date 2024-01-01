@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"log"
@@ -66,8 +67,18 @@ func uploadHandler(c echo.Context) error {
 	}
 	defer src.Close()
 
+	fileFormat := file.Filename[len(file.Filename)-3:]
+	formats := []string{"mp3", "flac", "m4a", "mp4", "mpeg", "mpga", "oga", "ogg", "wav", "webm"}
+	if !helper.Contains(formats, fileFormat) {
+		_, err := os.Create("data/" + file.Filename)
+		if err != nil {
+			log.Println(err)
+		}
+		return c.Render(http.StatusInternalServerError, "error.html", map[string]string{"message": fmt.Sprintf("file format should be only: %v", formats)})
+	}
+
 	// Save the file to the "uploads" directory
-	dst, err := os.Create("uploads/" + uuid.NewString() + ".mp3")
+	dst, err := os.Create("uploads/" + uuid.NewString() + "." + fileFormat)
 	if err != nil {
 		return c.Render(http.StatusInternalServerError, "error.html", map[string]string{"message": "Failed to save the file"})
 	}
