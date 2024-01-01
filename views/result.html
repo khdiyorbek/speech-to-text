@@ -1,0 +1,39 @@
+<!-- views/result.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text Result</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4">Speech-to-Text Result</h1>
+        <p class="mb-3">Transcribed Text:</p>
+        <pre id="resultText" style="white-space: pre-wrap;">{{.text}}</pre>
+        <button class="btn btn-primary mt-3" onclick="copyResult()">Copy Result</button>
+        <a href="/" class="btn btn-secondary mt-3">Back to Home</a>
+    </div>
+    <!-- Bootstrap JS and Popper.js (required for Bootstrap dropdowns) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Clipboard.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <script>
+        function copyResult() {
+            var resultText = document.getElementById("resultText");
+            var clipboard = new ClipboardJS('.btn-primary', {
+                text: function () {
+                    return resultText.innerText;
+                }
+            });
+
+            clipboard.on('success', function (e) {
+                e.clearSelection();
+                alert('Result copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>
